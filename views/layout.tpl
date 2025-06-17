@@ -9,11 +9,22 @@
 <body>
 
     <div class="container">
-        {{!base}}  <!-- O conteúdo das páginas filhas virá aqui -->
+            <h1>Sistema ESTOKE</h1>
+            % if session.get('user_id'):
+            <nav>
+                <span>Bem-vindo!</span>
+                <a href="/logout">Sair</a>
+            </nav>
+            % end
+        </div>
+    </header>
+
+    <div class="container">
+        {{!base}}
     </div>
 
     <footer>
-        <p>&copy; 2025, Meu Projeto. Todos os direitos reservados.</p>
+        <p>&copy; 2025, ESTOKE. Todos os direitos reservados.</p>
     </footer>
 
     <!-- Scripts JS no final do body -->
