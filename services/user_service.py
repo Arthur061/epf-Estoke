@@ -1,42 +1,47 @@
 from bottle import request
-from models.user import UserModel, User
+from models.user import user_repository, User
+import sqlite3
 
 class UserService:
     def __init__(self):
-        self.user_model = UserModel()
-
-
+        self.repo = user_repository
+    
     def get_all(self):
-        users = self.user_model.get_all()
+        users = self.repo.get_all()
         return users
-
-
-    def save(self):
-        last_id = max([u.id for u in self.user_model.get_all()], default=0)
-        new_id = last_id + 1
-        name = request.forms.get('name')
-        email = request.forms.get('email')
-        birthdate = request.forms.get('birthdate')
-
-        user = User(id=new_id, name=name, email=email, birthdate=birthdate)
-        self.user_model.add_user(user)
-
-
+    
     def get_by_id(self, user_id):
-        return self.user_model.get_by_id(user_id)
-
-
-    def edit_user(self, user):
-        name = request.forms.get('name')
-        email = request.forms.get('email')
-        birthdate = request.forms.get('birthdate')
-
+        return self.repo.get_by_id(user_id)
+    
+    def save(self, name, email, birthdate, password):
+        user = User(None, name, email, birthdate)
+        user.set_password(password)
+        
+        try:
+            new_user_id = self.repo.add_user(user)
+            return new_user_id is not None
+        except sqlite3.IntegrityError:
+            return False
+    
+    def update_user(self, user_id, name, email, birthdate):
+        user = self.repo.get_by_id(user_id)
+        if not user:
+            return False
+        
         user.name = name
         user.email = email
         user.birthdate = birthdate
-
-        self.user_model.update_user(user)
-
-
+        
+        try:
+            return self.repo.update_user(user)
+        except sqlite3.IntegrityError:
+            return False
+    
     def delete_user(self, user_id):
-        self.user_model.delete_user(user_id)
+        return self.repo.delete_user(user_id)
+    
+    def authenticate(self, email, password):
+        user = self.repo.get_by_email(email)
+        if user and user.check_password(password):
+            return user.to_dict()
+        return None

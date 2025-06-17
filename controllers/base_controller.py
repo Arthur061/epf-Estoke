@@ -1,10 +1,19 @@
-from bottle import static_file
+from bottle import request, static_file, redirect as bottle_redirect
+from bottle import template as render_template
+from functools import wraps
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not request.environ.get('beaker.session', {}).get('user_id'):
+            return bottle_redirect('/login')
+        return func(*args, **kwargs)
+    return wrapper
 
 class BaseController:
     def __init__(self, app):
         self.app = app
         self._setup_base_routes()
-
 
     def _setup_base_routes(self):
         """Configura rotas básicas comuns a todos os controllers"""
@@ -14,11 +23,8 @@ class BaseController:
         # Rota para arquivos estáticos (CSS, JS, imagens)
         self.app.route('/static/<filename:path>', callback=self.serve_static)
 
-
-    def home_redirect(self):
-        """Redireciona a rota raiz para /users"""
-        return self.redirect('/users')
-
+    def home_redirect(self): # vai iniciar no login 
+        bottle_redirect('/login')
 
     def helper(self):
         return self.render('helper-final')
@@ -31,7 +37,9 @@ class BaseController:
 
     def render(self, template, **context):
         """Método auxiliar para renderizar templates"""
-        from bottle import template as render_template
+        session = request.environ.get('beaker.session', {})
+        context['session'] = session
+        
         return render_template(template, **context)
 
 
