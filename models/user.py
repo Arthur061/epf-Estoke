@@ -28,7 +28,7 @@ class User:
     def _hash_password(self, password): # gera hash bcrypt da senha
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
-    def check_password(self, password): # verifica se a senha corresponde ao hash
+    def check_password(self, password): # verifica se a senha = ao hash
         if not self.password:
             return False
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
