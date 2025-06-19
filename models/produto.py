@@ -34,7 +34,7 @@ class Produto:
             raise ValueError("Tipo de movimentação inválido. Use \'entrada\' ou \'saida\'.")
 
 class ProdutoRepository:
-    def __init__(self, db_path=\'database.db\'):
+    def __init__(self, db_path='database.db'):
         self.db_path = db_path
         self._create_table()
 
