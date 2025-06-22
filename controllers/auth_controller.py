@@ -13,6 +13,8 @@ class AuthController(BaseController):
         self.app.route('/login', method=['GET', 'POST'], callback=self.login)
         self.app.route('/register', method=['GET', 'POST'], callback=self.register)
         self.app.route('/logout', method='GET', callback=self.logout)
+        self.app.route('/home', method='GET', callback=self.pagina_home)
+        self.app.route('/login-sucesso', method='GET', callback=self.login_bem_sucedido)
     
     def login(self):
         if request.method == 'GET':
@@ -46,15 +48,22 @@ class AuthController(BaseController):
             success = self.user_service.save(name, email, birthdate, password)
             
             if success:
-                redirect('/login')
+                return redirect('/login')
             else:
                 return self.render('register', error="Email já cadastrado")
     
     def logout(self):
         session = request.environ.get('beaker.session', {})
         session.delete()
-        self.redirect('/login')
+        return self.redirect('/login')
+    
+    def pagina_home(self): 
+        return "<h1>Bem-vindo à Página Home!</h1>"
 
-# Cria as rotas para autenticação
+    def login_bem_sucedido(self):
+        print(">>> O login foi validado, redirecionando para /home...")
+        return redirect('/home')
+
+    
 auth_routes = Bottle()
 auth_controller = AuthController(auth_routes)

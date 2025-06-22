@@ -19,7 +19,8 @@
         </div>
         
         <div class="form-actions">
-            <button type="submit" class="btn-submit">Entrar</button>
+            <button type="button" onclick="window.location.href='/home'" class="btn-submit">Entrar</button>
+
             <a href="/register" class="btn-link">Criar conta</a>
         </div>
         
