@@ -1,0 +1,36 @@
+from models.produto import Produto, ProdutoRepository
+
+class ProdutoService:
+    def __init__(self, db_path='database.db'):
+        self.repository = ProdutoRepository(db_path)
+
+    def get_all_produtos(self):
+        return self.repository.get_all()
+
+    def get_produto_by_id(self, produto_id):
+        return self.repository.get_by_id(produto_id)
+
+    def add_produto(self, produto):
+        return self.repository.add_produto(produto)
+
+    def update_produto(self, produto):
+        return self.repository.update_produto(produto)
+
+    def delete_produto(self, produto_id):
+        return self.repository.delete_produto(produto_id)
+
+    def verificar_reposicao(self, produto_id):
+        produto = self.repository.get_by_id(produto_id)
+        if produto:
+            return produto.verificar_reposicao()
+        return False
+
+    def registrar_movimentacao(self, produto_id, tipo, quantidade):
+        produto = self.repository.get_by_id(produto_id)
+        if produto:
+            produto.registrar_movimentacao(tipo, quantidade)
+            self.repository.update_produto(produto)
+            return True
+        return False
+
+
