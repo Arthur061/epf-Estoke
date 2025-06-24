@@ -17,20 +17,27 @@ class AuthController(BaseController):
         self.app.route('/login-sucesso', method='GET', callback=self.login_bem_sucedido)
     
     def login(self):
+        """Lida com o processo de login."""
         if request.method == 'GET':
             return self.render('login', error=None)
-        else:
-            email = request.forms.get('email')
-            password = request.forms.get('password')
-            user = self.user_service.authenticate(email, password)
+        
+        email = request.forms.get('email')
+        password = request.forms.get('password')
+        
+        user = self.user_service.authenticate(email, password)
+        
+        if user:
+            print(">>> LOGIN BEM-SUCEDIDO. Redirecionando para /home...")
             
-            if user:
-                session = request.environ['beaker.session']
-                session['user_id'] = user['id']
-                session.save()
-                self.redirect('/users')
-            else:
-                return self.render('login', error="Credenciais inválidas")
+            session = request.environ['beaker.session']
+            session['user_id'] = user['id']
+            session.save()
+            
+            return redirect('/home')
+        else:
+            print(">>> LOGIN FALHOU. Renderizando a página de login com erro...")
+
+            return self.render('login', error="Credenciais inválidas")
     
     def register(self):
         if request.method == 'GET':
@@ -57,8 +64,23 @@ class AuthController(BaseController):
         session.delete()
         return self.redirect('/login')
     
-    def pagina_home(self): 
-        return "<h1>Bem-vindo à Página Home!</h1>"
+    def pagina_home(self):
+        session = request.environ.get('beaker.session')
+        user_id = session.get('user_id')
+
+        if not user_id:
+            return redirect('/login')
+
+        user = self.user_service.get_by_id(user_id)
+        user_name = user.name.split()[0] if user else "Usuário"
+
+        user_name = "Usuário"
+
+        if user and user.name and user.name.strip():
+            user_name = user.name.strip().split()[0]
+
+        
+        return self.render('home_template', user_name=user_name)
 
     def login_bem_sucedido(self):
         print(">>> O login foi validado, redirecionando para /home...")

@@ -1,4 +1,3 @@
-from bottle import request
 from models.user import user_repository, User
 import sqlite3
 
@@ -7,21 +6,23 @@ class UserService:
         self.repo = user_repository
     
     def get_all(self):
-        users = self.repo.get_all()
-        return users
+        return self.repo.get_all()
     
     def get_by_id(self, user_id):
         return self.repo.get_by_id(user_id)
     
+    # Salva um novo usuário, com verificação no email
     def save(self, name, email, birthdate, password):
+        existing_user = self.repo.get_by_email(email)
+        if existing_user:
+            return False
+
         user = User(None, name, email, birthdate)
         user.set_password(password)
         
-        try:
-            new_user_id = self.repo.add_user(user)
-            return new_user_id is not None
-        except sqlite3.IntegrityError:
-            return False
+        new_user_id = self.repo.add_user(user)
+        
+        return new_user_id is not None
     
     def update_user(self, user_id, name, email, birthdate):
         user = self.repo.get_by_id(user_id)
@@ -31,10 +32,10 @@ class UserService:
         user.name = name
         user.email = email
         user.birthdate = birthdate
-        
+
         try:
             return self.repo.update_user(user)
-        except sqlite3.IntegrityError:
+        except sqlite3.Error:
             return False
     
     def delete_user(self, user_id):

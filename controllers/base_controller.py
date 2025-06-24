@@ -1,6 +1,8 @@
 from bottle import request, static_file, redirect as bottle_redirect
 from bottle import template as render_template
 from functools import wraps
+from bottle import template, request
+from services.user_service import UserService
 
 def login_required(func):
     @wraps(func)
@@ -35,12 +37,24 @@ class BaseController:
         return static_file(filename, root='./static')
 
 
-    def render(self, template, **context):
-        """Método auxiliar para renderizar templates"""
-        session = request.environ.get('beaker.session', {})
-        context['session'] = session
+    def render(self, template_name, **kwargs):
+        session = request.environ.get('beaker.session')
         
-        return render_template(template, **context)
+        kwargs['session'] = session
+
+        user_id = session.get('user_id')
+
+        if user_id:
+            user_service = UserService()
+            user = user_service.get_by_id(user_id)
+            
+            user_name = "Usuário"
+            if user and user.name and user.name.strip():
+                user_name = user.name.strip().split()[0]
+            
+            kwargs['user_name'] = user_name
+
+        return template(template_name, **kwargs)
 
 
     def redirect(self, path):

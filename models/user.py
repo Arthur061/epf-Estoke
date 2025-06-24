@@ -25,10 +25,10 @@ class User:
     def set_password(self, password): # gera hash da senha
         self.password = self._hash_password(password)
 
-    def _hash_password(self, password): # gera hash bcrypt da senha
+    def _hash_password(self, password):
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
-    def check_password(self, password): # verifica se a senha = ao hash
+    def check_password(self, password): # verifica se a senha =  hash
         if not self.password:
             return False
         return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
@@ -41,15 +41,31 @@ class UserRepository:
         return sqlite3.connect(self.db_path)
     
     def _row_to_user(self, row):
+        if not row:
+            return None
         return User(
             id=row[0],
             name=row[1],
             email=row[2],
             birthdate=row[3],
-            password=row[4] if len(row) > 4 else None
+            password=row[4]
         )
     
-    def get_all(self): # retorna todos users (se for precisar na parte admin)
+    def get_by_email(self, email): # Busca um usuário pelo seu e-mail e retorna o objeto
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, name, email, birthdate, password FROM users WHERE email = ?", (email,))
+            row = cursor.fetchone()
+            return self._row_to_user(row)
+        
+    def get_by_id(self, user_id): # Busca um usuário pelo seu ID e retorna o objeto
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, name, email, birthdate, password FROM users WHERE id = ?", (user_id,))
+            row = cursor.fetchone()
+            return self._row_to_user(row)
+
+    def get_all(self):
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT id, name, email, birthdate, password FROM users")
@@ -75,7 +91,7 @@ class UserRepository:
             conn.commit()
             return cursor.rowcount > 0
     
-    def delete_user(self, user_id): # Remove user do banco
+    def delete_user(self, user_id): # remove user do banco
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
