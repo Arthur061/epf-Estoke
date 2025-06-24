@@ -23,7 +23,7 @@ class BaseController:
         # Rota para arquivos estáticos (CSS, JS, imagens)
         self.app.route('/static/<filename:path>', callback=self.serve_static)
 
-    def home_redirect(self): # vai iniciar no login 
+    def home_redirect(self):
         bottle_redirect('/login')
 
     def helper(self):
