@@ -12,7 +12,7 @@
             
         <div class="form-group">
             <label for="username">Nome de Usuário</label>
-            <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
+            <input type="text" id="username" name="name" placeholder="Digite seu nome de usuário" required>
         </div>
             
         <div class="form-group">
