@@ -147,7 +147,7 @@ header {
     padding: 2rem;
 }
 
-.container { /* Classe genérica que você pode usar para alinhar conteúdo */
+.container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
@@ -306,4 +306,56 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
+}
+
+/* =================================
+   ESTILOS PARA A PÁGINA HOME
+==================================== */
+.welcome-container {
+  max-width: 850px; /* Define uma largura máxima para o texto não ficar muito esticado */
+  margin: 0 auto;   /* Centraliza o container na página */
+  padding: 2rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2); /* Um fundo sutil para destacar a área */
+  border-radius: 12px;
+}
+
+.welcome-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--light);
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: #ccc; /* Uma cor mais suave para o subtítulo */
+  margin-bottom: 2rem;
+}
+
+.welcome-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 204, 0, 0.5), transparent);
+  margin: 1rem auto 2.5rem auto; /* Espaçamento acima e abaixo da linha */
+  width: 80%;
+}
+
+.welcome-text {
+  text-align: justify; 
+  font-size: 1.1rem;
+  line-height: 1.8; 
+  color: #e0e0e0;
+}
+
+.welcome-text p {
+  margin-bottom: 1.5rem; 
+  text-indent: 2em; /* <-- ADICIONE ESTA LINHA para criar o recuo */
+}
+
+/* Garante que o último parágrafo não tenha recuo e continue centralizado */
+.welcome-text p:last-child {
+  margin-bottom: 0;
+  text-align: center;
+  text-indent: 0; /* <-- ADICIONE ESTA LINHA para remover o recuo dele */
 }
