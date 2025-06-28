@@ -1,9 +1,10 @@
-from models.user import user_repository, User
+from models.user import User, UserRepository
 import sqlite3
+import bcrypt
 
 class UserService:
     def __init__(self):
-        self.repo = user_repository
+        self.repo = UserRepository()
     
     def get_all(self):
         return self.repo.get_all()
