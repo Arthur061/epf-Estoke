@@ -95,5 +95,3 @@ class MovimentacaoRepository:
             cursor.execute("DELETE FROM movimentacoes WHERE id = ?", (movimentacao_id,))
             conn.commit()
             return cursor.rowcount > 0
-
-movimentacao_repository = MovimentacaoRepository()

@@ -88,5 +88,4 @@ class FornecedorRepository:
             conn.commit()
             return cursor.rowcount > 0
 
-fornecedor_repository = FornecedorRepository()
 

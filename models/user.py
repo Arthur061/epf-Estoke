@@ -98,4 +98,3 @@ class UserRepository:
             conn.commit()
             return cursor.rowcount > 0
         
-user_repository = UserRepository()
