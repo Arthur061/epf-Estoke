@@ -27,7 +27,9 @@
             </div>
 
             <div class="logo">
-                <h1>Sistema ESTOKE</h1>
+                <a href="/home" style="text-decoration: none; color: inherit;">
+                    <h1>Sistema ESTOKE</h1>
+                </a>
             </div>
 
             <nav>
