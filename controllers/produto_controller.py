@@ -5,11 +5,6 @@ from services.produto_service import ProdutoService
 from models.produto import Produto
 
 class ProdutoController:
-    """
-    Versão final e corrigida do controlador de produtos.
-    Utiliza um método auxiliar para obter a sessão de forma segura,
-    eliminando o erro "name 'session' is not defined".
-    """
     def __init__(self, bottle_app):
         self.app = bottle_app
         self.produto_service = ProdutoService()
@@ -34,12 +29,17 @@ class ProdutoController:
             return None, None, None 
 
         user_id = session.get('user_id', None)
-        user_name = session.get('user_name', 'Usuário')
-        return session, user_id, user_name
+        full_user_name = session.get('user_name', 'Usuário')
+        first_name = full_user_name.split()[0] if full_user_name else 'Usuário'
+        return session, user_id, first_name
 
     def listar_produtos(self):
         # Obtém os dados da sessão
         session, user_id, user_name = self._get_session_data()
+
+        # ---- INÍCIO DA DEPURAÇÃO ----
+        print(f"DEBUG: Sessão lida no /produtos: {session}")
+        # ---- FIM DA DEPURAÇÃO ----
         
         if not user_id:
             return redirect('/login')

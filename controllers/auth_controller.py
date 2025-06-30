@@ -27,11 +27,21 @@ class AuthController(BaseController):
         user = self.user_service.authenticate(email, password)
         
         if user:
-            print(">>> LOGIN BEM-SUCEDIDO. Redirecionando para /home...")
             
+            print(">>> LOGIN BEM-SUCEDIDO. Redirecionando para /home...")
+    
+            # ---- INÍCIO DA DEPURAÇÃO ----
+            print(f"DEBUG: Objeto 'user' recebido pelo controller: {user}") 
+            # ---- FIM DA DEPURAÇÃO ----
+
             session = request.environ['beaker.session']
             session['user_id'] = user['id']
+            session['user_name'] = user['name'] 
             session.save()
+
+            # ---- INÍCIO DA DEPURAÇÃO ----
+            print(f"DEBUG: Dados salvos na sessão: {session}")
+            # ---- FIM DA DEPURAÇÃO ----
             
             return redirect('/home')
         else:

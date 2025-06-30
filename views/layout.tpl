@@ -20,8 +20,8 @@
                         <li><a href="/fornecedores">Gerenciar Fornecedores</a></li>
                         <li><a href="/produtos/reposicao">Produtos para Reposição</a></li>
                         <li><a href="/movimentacoes">Registrar Movimentações</a></li>
-                        <li><a href="/administradores">Gerenciar Administradores</a></li>
-                        <li><a href="/users">Gerenciar Usuários</a></li>
+                        <li><a href="/admin/administradores">Gerenciar Administradores</a></li>
+                        <li><a href="/admin/users">Gerenciar Usuários</a></li>
                     </ul>
                 </div>
             </div>

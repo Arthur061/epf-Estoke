@@ -358,3 +358,56 @@ footer {
   text-align: center;
   text-indent: 0;
 }
+
+/* =================================
+   ESTILOS PARA TABELAS DE ADMIN
+==================================== */
+.admin-table {
+    width: 100%;
+    margin-top: 2rem;
+    border-collapse: collapse; 
+    color: var(--light);
+    background-color: rgba(0, 0, 0, 0.2); 
+    border-radius: 8px;
+    overflow: hidden; 
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-table thead th {
+    background-color: rgba(255, 204, 0, 0.15);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.admin-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.admin-table tbody tr:hover {
+    background-color: rgba(255, 204, 0, 0.1);
+}
+
+.admin-table .button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.admin-table .button-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.admin-table .button-danger {
+    background-color: var(--danger-color);
+    color: white;
+}

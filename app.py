@@ -5,6 +5,8 @@ from config import Config
 
 from controllers.auth_controller import AuthController
 from controllers.produto_controller import ProdutoController 
+from controllers.admin_controller import AdminController
+from controllers.fornecedor_controller import FornecedorController
 
 class App:
     def __init__(self):
@@ -35,11 +37,10 @@ class App:
         """
         print("🚀 Inicializando rotas da aplicação...")
         
-        # --- CORRETO: Cria as instâncias aqui ---
-        # Ao criar o objeto, o __init__ do controller é chamado, e ele mesmo
-        # configura suas rotas usando a instância do 'self.bottle' que passamos.
         auth_controller = AuthController(self.bottle)
         produto_controller = ProdutoController(self.bottle)
+        admin_controller = AdminController(self.bottle)          
+        fornecedor_controller = FornecedorController(self.bottle)
         
         # --- Rotas Globais ---
         @self.bottle.route('/')
@@ -59,6 +60,11 @@ class App:
         Inicia o processo de configuração de rotas e executa o servidor web.
         """
         self.setup_routes()
+
+        print("--- ROTAS REGISTRADAS ---")
+        for route in self.bottle.routes:
+            print(f"URL: {route.rule} | Método: {route.method}")
+        print("-------------------------")
         
         print(f"🌍 Servidor iniciado em http://{self.config.HOST}:{self.config.PORT}")
         print("   (Pressione CTRL+C para parar o servidor)")
