@@ -1,103 +1,77 @@
 import sqlite3
-import bcrypt
+from .user import User, UserRepository # Importar User e UserRepository
+import json
 
-class Administrador:
-    def __init__(self, id, nome, email, senha, permissoes):
-        self.id = id
-        self.nome = nome
-        self.email = email
-        self.senha = senha # Senha já deve ser o hash
-        self.permissoes = permissoes # Lista de strings, e.g., ["gerenciar_usuarios", "gerar_relatorios"]
+class Administrador(User):
+    def __init__(self, id, name, email, birthdate, password=None, permissoes=None):
+        super().__init__(id, name, email, birthdate, password, tipo="administrador") # Definir tipo como administrador
+        self.permissoes = permissoes if permissoes is not None else []
 
     def to_dict(self):
-        return {
-            "id": self.id,
-            "nome": self.nome,
-            "email": self.email,
-            "permissoes": self.permissoes
-        }
+        user_dict = super().to_dict()
+        user_dict["permissoes"] = self.permissoes
+        return user_dict
 
     @staticmethod
-    def from_row(row):
-        if row is None:
-            return None
-        # Permissões são armazenadas como string JSON no banco de dados
-        import json
-        permissoes = json.loads(row[4]) if row[4] else []
-        return Administrador(row[0], row[1], row[2], row[3], permissoes)
+    def from_dict(data):
+        admin = Administrador(data["id"], data["name"], data["email"], data["birthdate"], data.get("password"))
+        admin.permissoes = data.get("permissoes", [])
+        return admin
 
-    def set_senha(self, senha_texto_claro): # Gera hash da senha
-        self.senha = bcrypt.hashpw(senha_texto_claro.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    def gerenciar_usuarios(self):
+        # Lógica para gerenciar usuários
+        print(f"Administrador {self.name} gerenciando usuários.")
 
-    def check_senha(self, senha_texto_claro): # Verifica se a senha corresponde ao hash
-        if not self.senha:
-            return False
-        return bcrypt.checkpw(senha_texto_claro.encode("utf-8"), self.senha.encode("utf-8"))
+    def gerar_relatorios(self):
+        # Lógica para gerar relatórios
+        print(f"Administrador {self.name} gerando relatórios.")
 
-class AdministradorRepository:
+class AdministradorRepository(UserRepository):
     def __init__(self, db_path='database.db'):
-        self.db_path = db_path
-        self.create_table()
-
-    def _get_connection(self):
-        return sqlite3.connect(self.db_path)
-
-    def create_table(self):
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS administradores (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL,
-                    email TEXT UNIQUE NOT NULL,
-                    senha TEXT NOT NULL,
-                    permissoes TEXT
-                )
-            """)
+        super().__init__(db_path)
 
     def _row_to_administrador(self, row):
-        return Administrador.from_row(row)
+        admin = Administrador(
+            id=row[0],
+            name=row[1],
+            email=row[2],
+            birthdate=row[3],
+            password=row[4],
+            permissoes=json.loads(row[5]) if row[5] else [] # Carregar permissões como lista
+        )
+        return admin
 
-    def get_all(self):
+    def add_administrador(self, admin): # add admin no banco
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, nome, email, senha, permissoes FROM administradores")
+            cursor.execute(
+                "INSERT INTO users (name, email, birthdate, password, tipo, permissoes) VALUES (?, ?, ?, ?, ?, ?)",
+                (admin.name, admin.email, admin.birthdate, admin.password, admin.tipo, json.dumps(admin.permissoes))
+            )
+            conn.commit()
+            return cursor.lastrowid 
+    
+    def update_administrador(self, admin): # att admin no banco
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE users SET name = ?, email = ?, birthdate = ?, password = ?, tipo = ?, permissoes = ? WHERE id = ?",
+                (admin.name, admin.email, admin.birthdate, admin.password, admin.tipo, json.dumps(admin.permissoes), admin.id)
+            )
+            conn.commit()
+            return cursor.rowcount > 0
+
+    def get_all_administradores(self):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, name, email, birthdate, password, permissoes FROM users WHERE tipo = 'administrador'")
             return [self._row_to_administrador(row) for row in cursor.fetchall()]
 
-    def get_by_id(self, admin_id):
+    def get_administrador_by_id(self, admin_id):
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, nome, email, senha, permissoes FROM administradores WHERE id = ?", (admin_id,))
+            cursor.execute("SELECT id, name, email, birthdate, password, permissoes FROM users WHERE id = ? AND tipo = 'administrador'", (admin_id,))
             row = cursor.fetchone()
-            return self._row_to_administrador(row)
+            return self._row_to_administrador(row) if row else None
 
-    def add_administrador(self, administrador):
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            import json
-            permissoes_json = json.dumps(administrador.permissoes)
-            cursor.execute(
-                "INSERT INTO administradores (nome, email, senha, permissoes) VALUES (?, ?, ?, ?)",
-                (administrador.nome, administrador.email, administrador.senha, permissoes_json)
-            )
-            conn.commit()
-            return cursor.lastrowid
 
-    def update_administrador(self, administrador):
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            import json
-            permissoes_json = json.dumps(administrador.permissoes)
-            cursor.execute(
-                "UPDATE administradores SET nome = ?, email = ?, senha = ?, permissoes = ? WHERE id = ?",
-                (administrador.nome, administrador.email, administrador.senha, permissoes_json, administrador.id)
-            )
-            conn.commit()
-            return cursor.rowcount > 0
-
-    def delete_administrador(self, admin_id):
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM administradores WHERE id = ?", (admin_id,))
-            conn.commit()
-            return cursor.rowcount > 0
