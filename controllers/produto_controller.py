@@ -1,6 +1,6 @@
 from bottle import template, request, redirect
 
-# Certifique-se que a importação é do arquivo 'produto_service.py' (singular)
+from services.fornecedor_service import FornecedorService 
 from services.produto_service import ProdutoService 
 from models.produto import Produto
 
@@ -8,6 +8,7 @@ class ProdutoController:
     def __init__(self, bottle_app):
         self.app = bottle_app
         self.produto_service = ProdutoService()
+        self.fornecedor_service = FornecedorService()
 
         # --- REGISTRO DAS ROTAS ---
         self.app.route('/produtos', method='GET')(self.listar_produtos)
@@ -17,6 +18,7 @@ class ProdutoController:
         self.app.route('/produtos/editar/<produto_id:int>', method='GET')(self.form_editar_produto)
         self.app.route('/produtos/editar/<produto_id:int>', method='POST')(self.editar_produto)
         self.app.route('/produtos/excluir/<produto_id:int>', method='POST')(self.excluir_produto_post)
+        self.app.route('/produtos/reposicao', method='GET')(self.listar_produtos_para_reposicao)
 
     def _get_session_data(self):
         """
@@ -25,7 +27,6 @@ class ProdutoController:
         """
         session = request.environ.get('beaker.session')
         if not session:
-            # Se o middleware de sessão falhar, retorna nulo para evitar mais erros
             return None, None, None 
 
         user_id = session.get('user_id', None)
@@ -34,7 +35,6 @@ class ProdutoController:
         return session, user_id, first_name
 
     def listar_produtos(self):
-        # Obtém os dados da sessão
         session, user_id, user_name = self._get_session_data()
 
         # ---- INÍCIO DA DEPURAÇÃO ----
@@ -46,7 +46,6 @@ class ProdutoController:
 
         try:
             produtos = self.produto_service.get_produtos_by_user_id(user_id)
-            # Passa a variável 'session' para o template
             return template('produtos', produtos=produtos, user_name=user_name, user_id=user_id, session=session)
         except Exception as e:
             print(f"ERRO FATAL AO BUSCAR PRODUTOS: {e}")
@@ -58,7 +57,6 @@ class ProdutoController:
         
         produto = self.produto_service.get_produto_by_id_and_user(produto_id, user_id)
         if produto:
-            # Passa a variável 'session' para o template
             return template('produto_detalhes', produto=produto, user_name=user_name, user_id=user_id, session=session)
         return redirect('/produtos?error=not_found')
 
@@ -66,7 +64,6 @@ class ProdutoController:
         session, user_id, user_name = self._get_session_data()
         if not user_id: return redirect('/login')
 
-        # Passa a variável 'session' para o template
         return template('produto_form', title='Adicionar Novo Produto', produto=None, action_url='/produtos/adicionar', user_name=user_name, user_id=user_id, session=session)
 
     def adicionar_produto(self):
@@ -84,7 +81,6 @@ class ProdutoController:
         produto = self.produto_service.get_produto_by_id_and_user(produto_id, user_id)
         if produto:
             action_url = f'/produtos/editar/{produto_id}'
-            # Passa a variável 'session' para o template
             return template('produto_form', title='Editar Produto', produto=produto, action_url=action_url, user_name=user_name, user_id=user_id, session=session)
         return redirect('/produtos?error=not_found')
 
@@ -102,3 +98,26 @@ class ProdutoController:
         
         deleted = self.produto_service.delete_produto(produto_id, user_id)
         redirect('/produtos?success=deleted' if deleted else '/produtos?error=delete_failed')
+    
+    # MÉTODO NOVO PARA A ROTA DE REPOSIÇÃO
+    def listar_produtos_para_reposicao(self):
+        session, user_id, user_name = self._get_session_data()
+        if not user_id:
+            return redirect('/login')
+
+        try:
+            produtos_para_reposicao = self.produto_service.get_produtos_para_reposicao(user_id)
+
+            fornecedores_dict = self.fornecedor_service.get_all_fornecedores_as_dict(user_id)
+
+            return template(
+                'produto_reposicao', 
+                produtos=produtos_para_reposicao,
+                fornecedores=fornecedores_dict,
+                user_name=user_name,
+                user_id=user_id,
+                session=session
+            )
+        except Exception as e:
+            print(f"ERRO AO GERAR RELATÓRIO DE REPOSIÇÃO: {e}")
+            return "Erro ao gerar relatório. Verifique os logs do servidor."
