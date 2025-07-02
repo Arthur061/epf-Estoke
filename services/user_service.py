@@ -12,20 +12,19 @@ class UserService:
     def get_by_id(self, user_id):
         return self.repo.get_by_id(user_id)
     
-    # Salva um novo usuário, com verificação no email
-    def save(self, name, email, birthdate, password):
+    def save(self, name, email, birthdate, password, tipo='comum'):
         existing_user = self.repo.get_by_email(email)
         if existing_user:
             return False
 
-        user = User(None, name, email, birthdate)
+        user = User(None, name, email, birthdate, tipo=tipo) 
         user.set_password(password)
         
         new_user_id = self.repo.add_user(user)
         
         return new_user_id is not None
     
-    def update_user(self, user_id, name, email, birthdate):
+    def update_user(self, user_id, name, email, birthdate, tipo): 
         user = self.repo.get_by_id(user_id)
         if not user:
             return False
@@ -33,6 +32,7 @@ class UserService:
         user.name = name
         user.email = email
         user.birthdate = birthdate
+        user.tipo = tipo
 
         try:
             return self.repo.update_user(user)
