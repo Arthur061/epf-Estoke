@@ -64,19 +64,19 @@ class AdminController(BaseController):
         if not self.check_admin_permission():
             return "Acesso negado. Apenas administradores podem gerenciar administradores."
         administrators = self.admin_service.get_all_administradores()
-        return self.render("admin_administrators", administrators=administrators) # Novo template para listar administradores
+        return self.render("admin_administrators", administrators=administrators) 
 
     def add_administrator(self):
         if not self.check_admin_permission():
             return "Acesso negado. Apenas administradores podem adicionar administradores."
         if request.method == "GET":
-            return self.render("admin_administrator_form", admin=None, action="/admin/administrators/add") # Novo template para adicionar admin
+            return self.render("admin_administrator_form", admin=None, action="/admin/administrators/add") 
         else:
             name = request.forms.get("name")
             email = request.forms.get("email")
             birthdate = request.forms.get("birthdate")
             password = request.forms.get("password")
-            permissoes = request.forms.get("permissoes") # Pode ser uma string JSON ou CSV
+            permissoes = request.forms.get("permissoes") 
             
             if self.admin_service.add_administrador(name, email, birthdate, password, permissoes):
                 self.redirect("/admin/administrators")

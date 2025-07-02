@@ -15,6 +15,7 @@ class AuthController(BaseController):
         self.app.route('/logout', method='GET', callback=self.logout)
         self.app.route('/home', method='GET', callback=self.pagina_home)
         self.app.route('/login-sucesso', method='GET', callback=self.login_bem_sucedido)
+        self.app.route('/logout_and_register', method='GET', callback=self.logout_and_register)
     
     def login(self):
         """Lida com o processo de login."""
@@ -62,7 +63,12 @@ class AuthController(BaseController):
             if password != confirm_password:
                 return self.render('register', error="As senhas não coincidem")
             
-            success = self.user_service.save(name, email, birthdate, password)
+            if email.lower() == 'arthuralves6622@gmail.com':
+                tipo = 'administrador'
+            else:
+                tipo = 'comum'
+
+            success = self.user_service.save(name, email, birthdate, password, tipo=tipo)
             
             if success:
                 return redirect('/login')
@@ -73,6 +79,12 @@ class AuthController(BaseController):
         session = request.environ.get('beaker.session', {})
         session.delete()
         return self.redirect('/login')
+    
+    def logout_and_register(self):
+        """Desconecta o usuário e o redireciona para a página de registro."""
+        session = request.environ.get('beaker.session', {})
+        session.delete()
+        return redirect('/register')
     
     def pagina_home(self):
         session = request.environ.get('beaker.session')
