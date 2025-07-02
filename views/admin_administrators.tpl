@@ -1,12 +1,22 @@
-%rebase('layout', title='Gerenciamento admins')
+% rebase('layout', title='Gerenciamento de Administradores')
 
-<div class="container">
-    <h1>Gerenciamento de Administradores</h1>
+<div class="content-container">
+    <div class="content-header">
+        <h1>Gerenciamento de Administradores</h1>
+        <a href="/admin/administrators/add" class="btn btn-primary">
+            <i class="fas fa-user-shield"></i> Adicionar Administrador
+        </a>
+    </div>
+
     <p>Aqui você pode visualizar e gerenciar os administradores do sistema.</p>
 
-    <a href="/admin/administrators/add" class="button button-success">Adicionar Novo Administrador</a>
-
-    <table class="table">
+    % if not administrators:
+    <div class="empty-state">
+        <i class="fas fa-user-shield"></i>
+        <p>Nenhum administrador cadastrado.</p>
+    </div>
+    % else:
+    <table class="admin-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -33,6 +43,5 @@
             % end
         </tbody>
     </table>
+    % end
 </div>
-
-

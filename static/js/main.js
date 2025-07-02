@@ -5,9 +5,10 @@
  * - Efeitos visuais da interface.
  * - Lógica do menu de navegação hambúrguer.
  * - Lógica do seletor de cores do formulário com persistência.
+ * - Validação de formulários específicos (ex: confirmação de senha).
  *
- * Versão: 2.0
- * Data: 24/06/2025
+ * Versão: 2.1
+ * Data: 30/06/2025
  */
 
 // PONTO DE ENTRADA PRINCIPAL: Executa tudo depois que a página carregou.
@@ -19,10 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
     inicializarEfeitosVisuais();
     inicializarMenuHamburguer();
     inicializarSeletorDeCores();
+    inicializarValidacaoDeSenha(); // <-- ADICIONADO AQUI
 
 });
 
-/* efeitos visuais */
+/* Efeitos visuais de fade-in */
 function inicializarEfeitosVisuais() {
     document.body.style.opacity = '0';
     setTimeout(() => {
@@ -31,8 +33,7 @@ function inicializarEfeitosVisuais() {
     }, 100); 
 }
 
-
-/* menu hamburguer */
+/* Lógica do menu hambúrguer */
 function inicializarMenuHamburguer() {
     const navToggleBtn = document.getElementById('navToggleBtn');
     const navDropdown = document.getElementById('navDropdown');
@@ -53,8 +54,7 @@ function inicializarMenuHamburguer() {
     });
 }
 
-
-
+/* Lógica do seletor de cores */
 function inicializarSeletorDeCores() {
     const colorOptions = document.querySelectorAll('.color-option');
     const formContainer = document.querySelector('.form-container');
@@ -63,7 +63,6 @@ function inicializarSeletorDeCores() {
         return; // Sai se não houver seletor de cor na página.
     }
 
-    // Função para aplicar a cor
     const aplicarCor = (color) => {
         if (formContainer) {
             formContainer.style.backgroundColor = color;
@@ -77,22 +76,43 @@ function inicializarSeletorDeCores() {
     }
 
     colorOptions.forEach(option => {
-        // Marca a bolinha da cor salva como ativa
         if (savedColor && option.style.backgroundColor === savedColor) {
             option.classList.add('active');
         }
 
         option.addEventListener('click', function() {
             const selectedColor = this.style.backgroundColor;
-
             aplicarCor(selectedColor);
-
-            // salva cor
             localStorage.setItem('formBgColor', selectedColor);
-
-            // att bolinha
             colorOptions.forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
         });
+    });
+}
+
+/**
+ * Valida o formulário de usuário, checando se as senhas coincidem.
+ */
+function inicializarValidacaoDeSenha() {
+    const userForm = document.getElementById('userForm');
+    
+    // Se o formulário não existir nesta página, a função não faz nada.
+    if (!userForm) {
+        return;
+    }
+
+    userForm.addEventListener('submit', function(e) {
+        const passwordInput = document.getElementById('password');
+        
+        // Só executa a validação se o campo de senha existir no formulário.
+        if (passwordInput) {
+            const password = passwordInput.value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                e.preventDefault(); // Impede o envio do formulário.
+            }
+        }
     });
 }
