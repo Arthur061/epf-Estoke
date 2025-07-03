@@ -1,14 +1,14 @@
-import sqlite3
 from datetime import datetime
-from models.movimentacao import Movimentacao, movimentacao_repository
+from models.movimentacao import Movimentacao, MovimentacaoRepository
+import sqlite3
 
 class MovimentacaoService:
     def __init__(self):
-        self.repo = movimentacao_repository
+        self.repo = MovimentacaoRepository()
     
-    def get_all(self):
-        """Retorna todas as movimentações"""
-        return self.repo.get_all()
+    def get_movimentacoes_by_user(self, user_id):
+        """Retorna todas as movimentações de um usuário específico"""
+        return self.repo.get_all_by_user(user_id)
     
     def get_by_id(self, movimentacao_id):
         """Busca movimentação por ID"""
@@ -18,24 +18,16 @@ class MovimentacaoService:
         """Busca movimentações por produto"""
         return self.repo.get_by_produto_id(produto_id)
     
-    def save(self, produto_id, tipo, quantidade):
-        """
-        Registra nova movimentação
-        Retorna ID se sucesso, None se falhou
-        """
+    def save(self, produto_id, tipo, quantidade, user_id):
         movimentacao = Movimentacao(
             id=None,
             produto_id=produto_id,
             data=datetime.now(),
             tipo=tipo,
-            qtd=quantidade
+            qtd=quantidade,
+            user_id=user_id 
         )
-        
-        try:
-            return self.repo.add_movimentacao(movimentacao)
-        except sqlite3.Error as e:
-            print(f"Erro ao salvar movimentação: {e}")
-            return None
+        return self.repo.add_movimentacao(movimentacao)
     
     def update(self, movimentacao_id, new_data):
         """
@@ -64,10 +56,8 @@ class MovimentacaoService:
         except sqlite3.Error:
             return False
     
-    def registrar_entrada(self, produto_id, quantidade):
-        """Método especializado para registrar entrada de estoque"""
-        return self.save(produto_id, 'entrada', quantidade)
+    def registrar_entrada(self, produto_id, quantidade, user_id):
+        return self.save(produto_id, 'entrada', quantidade, user_id)
     
-    def registrar_saida(self, produto_id, quantidade):
-        """Método especializado para registrar saída de estoque"""
-        return self.save(produto_id, 'saida', quantidade)
+    def registrar_saida(self, produto_id, quantidade, user_id):
+        return self.save(produto_id, 'saida', quantidade, user_id)
