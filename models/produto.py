@@ -88,3 +88,14 @@ class ProdutoRepository:
             cursor.execute("DELETE FROM produtos WHERE id = ? AND user_id = ?", (produto_id, user_id))
             conn.commit()
             return cursor.rowcount > 0
+    
+
+    def get_para_reposicao_by_user_id(self, user_id):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT id, user_id, nome, descricao, preco, qtd_estoque, qtd_minima, fornecedor_id
+                FROM produtos
+                WHERE user_id = ? AND qtd_estoque <= qtd_minima
+            """, (user_id,))
+            return [self._row_to_produto(row) for row in cursor.fetchall()]

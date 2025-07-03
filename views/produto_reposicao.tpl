@@ -1,4 +1,4 @@
-% rebase('layout', title='Gerenciamento de Reposição')
+% rebase('layout.tpl', title='Gerenciamento de Reposição')
 
 <div class="content-container">
     <div class="content-header">

@@ -7,6 +7,8 @@ from controllers.auth_controller import AuthController
 from controllers.produto_controller import ProdutoController 
 from controllers.admin_controller import AdminController
 from controllers.fornecedor_controller import FornecedorController
+from controllers.perfil_controller import PerfilController
+from controllers.movimentacao_controller import MovimentacaoController
 
 class App:
     def __init__(self):
@@ -41,11 +43,12 @@ class App:
         produto_controller = ProdutoController(self.bottle)
         admin_controller = AdminController(self.bottle)          
         fornecedor_controller = FornecedorController(self.bottle)
+        perfil_controller = PerfilController(self.bottle)
+        movimentacao_controller = MovimentacaoController(self.bottle)
         
         # --- Rotas Globais ---
         @self.bottle.route('/')
         def index():
-            # A página inicial deve ser a lista de produtos (ou a de login se não estiver logado)
             redirect('/produtos')
 
         @self.bottle.route('/static/<filename:path>')

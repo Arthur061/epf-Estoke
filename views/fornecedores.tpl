@@ -34,10 +34,13 @@
                 <td>{{fornecedor.contato}}</td>
                 <td>{{fornecedor.cnpj}}</td>
                 <td>
-                    <a href="/fornecedores/editar/{{fornecedor.id}}" class="button button-primary">Editar</a>
-                    <form action="/fornecedores/excluir/{{fornecedor.id}}" method="post" style="display:inline;">
-                        <button type="submit" class="button button-danger">Excluir</button>
-                    </form>
+                    <div class="actions-cell">
+                        <a href="/fornecedores/editar/{{fornecedor.id}}" class="button button-primary">Editar</a>
+                        
+                        <form action="/fornecedores/excluir/{{fornecedor.id}}" method="post" onsubmit="return confirm('Tem certeza que deseja excluir este fornecedor?');">
+                            <button type="submit" class="button button-danger">Excluir</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             %end

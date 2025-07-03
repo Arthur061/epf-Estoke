@@ -27,7 +27,7 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn-submit">Salvar</button>
-                <a href="/admin/fornecedores" class="btn-link">Cancelar</a>
+                <a href="/fornecedores" class="btn-link">Cancelar</a>
             </div>
         </form>
     </div>
