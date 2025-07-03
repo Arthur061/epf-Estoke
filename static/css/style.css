@@ -492,6 +492,12 @@ footer {
 /* =================================
    MELHORIA PARA SELECT
 ==================================== */
+
+.actions-cell {
+    display: flex; 
+    gap: 8px;      
+    align-items: center; 
+}
 .form-group input,
 .form-group select {
     width: 100%;
@@ -524,4 +530,84 @@ footer {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.2);
+}
+
+/* ==========================================================
+   ESTILOS PARA O ROPDOWN DE USUÁRIO 
+   ========================================================== */
+
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu-container .profile-link {
+    cursor: pointer;
+}
+
+
+.dropdown-menu {
+    display: none; 
+    position: absolute;
+    right: 0;
+    top: calc(100% + 15px);
+    background-color: rgba(30, 30, 46, 0.85); 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    min-width: 220px;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.user-menu-container .dropdown-menu ul {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 8px !important; 
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 10px 12px;
+    color: var(--light); 
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-text {
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    color: var(--accent); 
+    font-weight: bold;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 6px;
+    padding-top: 10px;
+}
+
+.user-menu-container .profile-link {
+    background: transparent;
+    border: none;
+
+    color: white;
+    font-family: inherit;
+    font-size: inherit;   
+    
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    cursor: pointer;
+}
+
+.user-menu-container .profile-link:hover {
+    color: #ffcc00; 
 }

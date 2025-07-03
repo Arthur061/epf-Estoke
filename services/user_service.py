@@ -47,3 +47,26 @@ class UserService:
         if user and user.check_password(password):
             return user.to_dict()
         return None
+    
+    def update_profile(self, user_id, data):
+        """
+        Atualiza os dados do perfil de um usuário a partir de um dicionário.
+        """
+        user = self.repo.get_by_id(user_id)
+        if not user:
+            return False
+
+        if 'name' in data:
+            user.name = data['name']
+        if 'email' in data:
+            user.email = data['email']
+        if 'birthdate' in data and data['birthdate']:
+            user.birthdate = data['birthdate']
+
+        if 'password' in data and data['password']:
+            user.set_password(data['password'])
+
+        try:
+            return self.repo.update_user(user)
+        except sqlite3.Error:
+            return False

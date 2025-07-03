@@ -94,15 +94,18 @@ class AuthController(BaseController):
             return redirect('/login')
 
         user = self.user_service.get_by_id(user_id)
-        user_name = user.name.split()[0] if user else "Usuário"
 
-        user_name = "Usuário"
+        if not user:
+            session.delete()
+            return redirect('/login')
 
-        if user and user.name and user.name.strip():
-            user_name = user.name.strip().split()[0]
+        is_admin_user = (user.tipo == 'administrador') 
 
-        
-        return self.render('home_template', user_name=user_name)
+        user_name = user.name.strip().split()[0]
+
+        return self.render('home_template',
+                        user_name=user_name,
+                        is_admin=is_admin_user) 
 
     def login_bem_sucedido(self):
         print(">>> O login foi validado, redirecionando para /home...")
