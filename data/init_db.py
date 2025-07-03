@@ -23,12 +23,14 @@ def init_db(db_path='database.db'):
     ''')
     print("-> Tabela 'users' verificada/criada com sucesso.")
 
-    # Tabela de Fornecedores
     print("Verificando/Criando tabela 'fornecedores'...")
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS fornecedores (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
+        contato TEXT,          
+        endereco TEXT,         
+        cnpj TEXT UNIQUE,      
         user_id INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
     )
@@ -52,6 +54,21 @@ def init_db(db_path='database.db'):
     )
     ''')
     print("-> Tabela 'produtos' verificada/criada com sucesso.")
+
+    print("Verificando/Criando tabela 'movimentação'...")
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS movimentacoes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        produto_id INTEGER NOT NULL,
+        data TEXT NOT NULL,
+        tipo TEXT NOT NULL,
+        qtd INTEGER NOT NULL,
+        user_id INTEGER NOT NULL, -- <-- ADICIONE ESTA LINHA
+        FOREIGN KEY (produto_id) REFERENCES produtos(id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+    ''')
+    print("-> Tabela 'movimentação' verificada/criada com sucesso.")
 
     conn.commit()
     conn.close()
