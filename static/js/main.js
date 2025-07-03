@@ -19,8 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Chama cada função principal para organizar o código.
     inicializarEfeitosVisuais();
     inicializarMenuHamburguer();
+    inicializarMenuUsuario();
     inicializarSeletorDeCores();
-    inicializarValidacaoDeSenha(); // <-- ADICIONADO AQUI
+    inicializarValidacaoDeSenha(); 
 
 });
 
@@ -96,7 +97,6 @@ function inicializarSeletorDeCores() {
 function inicializarValidacaoDeSenha() {
     const userForm = document.getElementById('userForm');
     
-    // Se o formulário não existir nesta página, a função não faz nada.
     if (!userForm) {
         return;
     }
@@ -104,15 +104,46 @@ function inicializarValidacaoDeSenha() {
     userForm.addEventListener('submit', function(e) {
         const passwordInput = document.getElementById('password');
         
-        // Só executa a validação se o campo de senha existir no formulário.
         if (passwordInput) {
             const password = passwordInput.value;
             const confirmPassword = document.getElementById('confirm_password').value;
             
             if (password !== confirmPassword) {
                 alert('As senhas não coincidem!');
-                e.preventDefault(); // Impede o envio do formulário.
+                e.preventDefault();
             }
         }
     });
+}
+
+/**
+ * Inicializa a lógica para o menu dropdown do usuário.
+ */
+function inicializarMenuUsuario() {
+    const userMenuButton = document.getElementById('userMenuButton');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (!userMenuButton || !userDropdown) {
+        return;
+    }
+
+    // Abre/fecha o menu ao clicar no botão
+    userMenuButton.addEventListener('click', function(event) {
+        event.stopPropagation(); 
+        userDropdown.classList.toggle('show');
+    });
+
+    const navDropdown = document.getElementById('navDropdown');
+    if (navDropdown && navDropdown.classList.contains('show')) {
+        navDropdown.classList.remove('show');
+    }
+    
+    const navToggleBtn = document.getElementById('navToggleBtn');
+    if (navToggleBtn) {
+        navToggleBtn.addEventListener('click', function() {
+            if (userDropdown.classList.contains('show')) {
+                userDropdown.classList.remove('show');
+            }
+        });
+    }
 }
