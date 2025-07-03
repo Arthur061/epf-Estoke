@@ -18,12 +18,10 @@ class ProdutoService:
 
     def add_produto(self, produto):
         """ Adiciona um novo produto. """
-        # Aqui você poderia adicionar validações, como verificar se o nome já existe
         return self.repository.add(produto)
 
     def update_produto(self, produto):
         """ Atualiza um produto existente. """
-        # Garante que o produto a ser atualizado existe e pertence ao usuário
         produto_existente = self.repository.get_by_id_and_user(produto.id, produto.user_id)
         if not produto_existente:
             raise ValueError("Produto não encontrado ou não pertence ao usuário.")
@@ -31,6 +29,8 @@ class ProdutoService:
 
     def delete_produto(self, produto_id, user_id):
         """ Deleta um produto. """
-        # A verificação do user_id já é feita no repositório.
         return self.repository.delete(produto_id, user_id)
 
+    def get_produtos_para_reposicao(self, user_id):
+        """ Obtém produtos com estoque baixo para um usuário específico. """
+        return self.repository.get_para_reposicao_by_user_id(user_id)
