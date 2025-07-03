@@ -34,9 +34,20 @@
 
             <nav>
                 % if session and session.get('user_id'):
-                    <a href="/perfil" class="profile-link">
-                        <i class="fas fa-user-circle"></i> Olá, {{ user_name or 'Usuário' }}!
-                    </a>
+                    <div class="user-menu-container">
+                        <button type="button" id="userMenuButton" class="profile-link">
+                            <i class="fas fa-user-circle"></i> Olá, {{ user_name or 'Usuário' }}!
+                        </button>
+                        <div id="userDropdown" class="dropdown-menu">
+                            <ul>
+                                <li><a href="/perfil"><i class="fas fa-user-edit"></i> Editar dados</a></li>
+                                
+                                % if locals().get('is_admin'):
+                                    <li class="admin-text">Você é um administrador</li>
+                                % end
+                            </ul>
+                        </div>
+                    </div>
                     <a href="/logout">Sair</a>
                 % else:
                     <a href="/login">Entrar</a>
