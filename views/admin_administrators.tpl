@@ -3,7 +3,7 @@
 <div class="content-container">
     <div class="content-header">
         <h1>Gerenciamento de Administradores</h1>
-        <a href="/admin/administrators/add" class="btn btn-primary">
+        <a href="/admin/users" class="btn btn-primary">
             <i class="fas fa-user-shield"></i> Adicionar Administrador
         </a>
     </div>
