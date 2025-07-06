@@ -54,7 +54,6 @@ class PerfilController:
         if password:
             update_data['password'] = password
 
-        # Chama o método correto no serviço
         self.user_service.update_profile(user_id, update_data)
 
         session['message'] = 'Perfil atualizado com sucesso!'

@@ -10,7 +10,6 @@ class UserController(BaseController):
         self.setup_routes()
         self.user_service = UserService()
 
-
     # Rotas User
     def setup_routes(self):
         self.app.route('/users', method='GET', callback=self.list_users)
@@ -86,7 +85,6 @@ class UserController(BaseController):
                                 action=f"/users/edit/{user_id}",
                                 errors=errors)
             
-            # Atualizar no banco
             success = self.user_service.edit_user(user_id, name, email, birthdate)
             
             if not success:

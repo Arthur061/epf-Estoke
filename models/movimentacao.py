@@ -23,8 +23,6 @@ class Movimentacao:
     def registrar(self):
         print(f"Movimentação registrada: Produto ID {self.produto_id}, Tipo: {self.tipo}, Quantidade: {self.qtd}")
 
-# Em models/movimentacao.py
-
 class MovimentacaoRepository:
     def __init__(self, db_path='database.db'):
         self.db_path = db_path

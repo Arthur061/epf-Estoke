@@ -42,8 +42,6 @@ class MovimentacaoController(BaseController):
             print(f"ERRO AO LISTAR MOVIMENTAÇÕES: {e}")
             return "Erro ao carregar a página de movimentações."
 
-    # Em controllers/movimentacao_controller.py
-
     def registrar_movimentacao(self):
         """Processa o registro de uma nova movimentação."""
         session = request.environ.get('beaker.session', {})

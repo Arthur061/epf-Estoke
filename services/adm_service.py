@@ -38,9 +38,8 @@ class AdministradorService:
             return False
 
     def delete_administrador(self, admin_id):
-        return self.admin_repo.delete_user(admin_id) # Administrador herda de User, então pode usar delete_user
+        return self.admin_repo.delete_user(admin_id) 
 
-    # Métodos para gerenciar usuários (conforme o diagrama)
     def gerenciar_usuarios(self, admin_id):
         admin = self.get_administrador_by_id(admin_id)
         if admin:

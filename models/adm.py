@@ -1,10 +1,10 @@
 import sqlite3
-from .user import User, UserRepository # Importar User e UserRepository
+from .user import User, UserRepository 
 import json
 
 class Administrador(User):
     def __init__(self, id, name, email, birthdate, password=None, permissoes=None):
-        super().__init__(id, name, email, birthdate, password, tipo="administrador") # Definir tipo como administrador
+        super().__init__(id, name, email, birthdate, password, tipo="administrador") 
         self.permissoes = permissoes if permissoes is not None else []
 
     def to_dict(self):

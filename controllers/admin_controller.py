@@ -26,14 +26,13 @@ class AdminController(BaseController):
             return False 
         
         admin = self.admin_service.get_administrador_by_id(user_id)
-        
         return admin is not None
 
     def list_all_users(self):
         if not self.check_admin_permission():
             return "Acesso negado. Apenas administradores podem gerenciar usuários."
         users = self.user_service.get_all()
-        return self.render("admin_users", users=users) # Novo template para listar usuários por admin
+        return self.render("admin_users", users=users) 
 
     def edit_user_by_admin(self, user_id):
         if not self.check_admin_permission():
@@ -43,7 +42,7 @@ class AdminController(BaseController):
             return "Usuário não encontrado"
 
         if request.method == "GET":
-            return self.render("admin_user_form", user=user, action=f"/admin/users/edit/{user_id}") # Novo template para editar usuário por admin
+            return self.render("admin_user_form", user=user, action=f"/admin/users/edit/{user_id}") 
         else:
             name = request.forms.get("name")
             email = request.forms.get("email")
