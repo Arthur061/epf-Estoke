@@ -1,8 +1,6 @@
-# Projeto Template: POO com Python + Bottle + JSON
+# ESTOKE: Controle de Estoque Inteligente
 
-Este é um projeto de template educacional voltado para o ensino de **Programação Orientada a Objetos (POO)** do Prof. Lucas Boaventura, Universidade de Brasília (UnB).
-
-Utiliza o microframework **Bottle**. Ideal para uso em disciplinas introdutórias de Engenharia de Software ou Ciência da Computação.
+ESTOKE é um projeto web educacional que demonstra a construção de uma aplicação de controle de inventário utilizando Programação Orientada a Objetos (POO) com Python e o microframework Bottle. O projeto foi pensado para ser uma base de estudos clara, didática e extensível, ideal para disciplinas de Engenharia de Software e afins.
 
 ## 💡 Objetivo
 
@@ -19,16 +17,48 @@ poo-python-bottle-template/
 ├── requirements.txt # Dependências do projeto
 ├── README.md # Este arquivo
 ├── controllers/ # Controladores e rotas
-├── models/ # Definição das entidades (ex: User)
-├── services/ # Lógica de persistência (JSON)
+├── models/ # Definição das entidades 
+├── services/ # Lógica de persistência 
 ├── views/ # Arquivos HTML (Bottle Templating)
 ├── static/ # CSS, JS e imagens
 ├── data/ # Arquivos JSON de dados
 └── .vscode/ # Configurações opcionais do VS Code
 ```
 
-
 ---
+
+## ✨ Funcionalidades Principais
+Autenticação de Usuários: Sistema completo de registro e login com armazenamento seguro de senhas (hash).
+
+Gestão de Produtos (CRUD): Cadastro, visualização, edição e remoção de produtos.
+
+Gestão de Fornecedores (CRUD): Gerenciamento completo de fornecedores associados aos produtos.
+
+Controle de Estoque: Registro de movimentações de entrada e saída, com atualização em tempo real do estoque.
+
+Relatório de Reposição Inteligente: O sistema identifica e lista proativamente os produtos que atingiram o estoque mínimo, sugerindo a reposição.
+
+Painel de Administrador: Área segura para gerenciamento de todos os usuários e administradores do sistema.
+
+Interface Responsiva e Personalizável: Design moderno com um seletor de cores para personalizar a aparência dos formulários.
+
+## 🛠️ Tecnologias Utilizadas
+
+Backend: Python 3.9+
+
+Bottle: Microframework web leve e rápido.
+
+SQLite: Banco de dados relacional embarcado.
+
+bcrypt: Para hashing seguro de senhas.
+
+Frontend:
+
+HTML5
+
+CSS3 (com Flexbox e Variáveis CSS)
+
+JavaScript (vanilla) para interatividade e validações no cliente.
 
 ## 📁 Descrição das Pastas
 
