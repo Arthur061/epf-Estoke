@@ -1,6 +1,6 @@
 # ESTOKE: Controle de Estoque Inteligente
 
-ESTOKE é um projeto web educacional que demonstra a construção de uma aplicação de controle de inventário utilizando Programação Orientada a Objetos (POO) com Python e o microframework Bottle. O projeto foi pensado para ser uma base de estudos clara, didática e extensível, ideal para disciplinas de Engenharia de Software e afins.
+ESTOKE é um projeto web educacional que demonstra a construção de uma aplicação de controle de inventário utilizando Programação Orientada a Objetos (POO) com Python e o microframework Bottle. O projeto foi pensado para ser uma base de estudos clara, didática e extensíve.
 
 ## 💡 Objetivo
 
