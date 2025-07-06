@@ -33,12 +33,6 @@
                 <td>{{admin.name}}</td>
                 <td>{{admin.email}}</td>
                 <td>{{', '.join(admin.permissoes)}}</td>
-                <td>
-                    <a href="/admin/administrators/edit/{{admin.id}}" class="button button-primary">Editar</a>
-                    <form action="/admin/administrators/delete/{{admin.id}}" method="post" style="display:inline;">
-                        <button type="submit" class="button button-danger">Excluir</button>
-                    </form>
-                </td>
             </tr>
             % end
         </tbody>
